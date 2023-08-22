@@ -1,4 +1,4 @@
-# xv6-perrosbomba
+# Tarea 1 - Sistemas Operativos
 
 1-  Se pone #Define SYS_getprocs  en syscall.h 
 
