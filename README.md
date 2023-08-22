@@ -94,7 +94,7 @@ int sys_getprocs(void) {
 ```   
 
 10. Se modifica el Makefile, agregando las siguientes líneas de código:
-```C
+```Makefile
   _UPROGS=\
   ...
   _cuenta\
@@ -109,3 +109,4 @@ Fuentes:
 2. https://stackoverflow.com/questions/57745250/how-to-add-a-system-call-to-find-the-number-of-processes-in-xv6
 3. https://stackoverflow.com/questions/8021774/how-do-i-add-a-system-call-utility-in-xv6
 4. https://www.geeksforgeeks.org/xv6-operating-system-adding-a-new-system-call/
+5. https://webc.uai.cl/pluginfile.php/976233/mod_resource/content/1/Clase_02.pdf
