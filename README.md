@@ -1,5 +1,7 @@
 # Tarea 1 - Sistemas Operativos
 
+### Integrantes: Pablo Silva, José Castillo y Mario Rozas.
+
 1. Se agrega la siguiente línea de código en syscall.h: 
 ```C
 #Define SYS_getprocs
