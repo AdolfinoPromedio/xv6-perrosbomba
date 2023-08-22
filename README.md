@@ -1,7 +1,9 @@
 # xv6-perrosbomba
 
 1-  Se pone #Define SYS_getprocs  en syscall.h 
+
 2-  Se pone  [SYS_getprocs]   sys_getprocs, en syscall.c
+
 3-  Se pone  extern int sys_getprocs(void); en syscall.c
 
 4- Se coloca Sysproc.c:
