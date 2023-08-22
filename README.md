@@ -1,18 +1,30 @@
 # Tarea 1 - Sistemas Operativos
 
-1-  Se pone #Define SYS_getprocs  en syscall.h 
+1. Se agrega la siguiente línea de código en syscall.h: 
+```C
+#Define SYS_getprocs
+```
 
-2-  Se pone  [SYS_getprocs]   sys_getprocs, en syscall.c
+2. Se agrega la siguiente línea de código en syscall.c:
+```C
+[SYS_getprocs]   sys_getprocs,
+```
 
-3-  Se pone  extern int sys_getprocs(void); en syscall.c
+3. Se agrega la siguiente línea de código en syscall.c:
+```C
+extern int sys_getprocs(void);
+```
 
-4- Se coloca Sysproc.c:
-        int sys_getprocs(void){
-      return getprocs();
-    }
+4. Se agrega la siguiente línea de código en sysproc.c:
+```C
+int sys_getprocs(void){
+        return getprocs();
+}
+```
 
-5-  Se agrega la funcion  en proc.c:
-      int sys_getprocs(void) {
+5. Se agrega la siguiente línea de código en proc.c:
+```C
+int sys_getprocs(void) {
         struct proc *p;
         int count = 0;
 
@@ -25,14 +37,17 @@
         release(&ptable.lock);
 
         return count;
-      } 
+} 
+```
 
-6- En defs.h coloca :
+6. Se agrega la siguiente línea de código en defs.h:
+```C
   // proc.c
   .  
   .
   .
   int             getprocs(void);
+
   // syscall.c
   int             argint(int, int);
   int             argptr(int, char, int);
@@ -40,8 +55,10 @@
   .
   .
   int             getprocs(void);
+```
 
-7-En user.h coloca int getprocs(void);:
+7. Se agrega la siguiente línea de código en user.h:
+```C
   // system calls
       int fork(void);
       int exit(void) __attribute__((noreturn));
@@ -49,16 +66,21 @@
       .
       .
       int getprocs(void);
-8-En usys.S  en pone SYSCALL(getprocs)
+```
+
+8. Se agrega la siguiente línea de código en usys.S:
+```C
   SYSCALL(fork)
   SYSCALL(exit)
   SYSCALL(wait)
   .
   .
   .
-  SYSCALL(getprocs)      
+  SYSCALL(getprocs)  
+```    
 
-9-  crea cuenta.c y coloca el codigo:
+9. Se crea el archivo cuenta.c y se agrega el siguiente código:
+```C
   #include "types.h"
   #include "stat.h"
   #include "user.h"
@@ -67,7 +89,10 @@
     printf(1, "La cantidad de procesos en ejecucion en la CPU es %d\n", getprocs());
     exit();
   }
-10- modificar Makefile :
+```   
+
+10. Se modifica el Makefile, agregando las siguientes líneas de código:
+```C
   _UPROGS=\
   ...
   _cuenta\
@@ -75,3 +100,10 @@
   EXTRA=\
   ...
   cuenta.c\
+```   
+---
+Fuentes:
+1. https://www.youtube.com/watch?v=21SVYiKhcwM
+2. https://stackoverflow.com/questions/57745250/how-to-add-a-system-call-to-find-the-number-of-processes-in-xv6
+3. https://stackoverflow.com/questions/8021774/how-do-i-add-a-system-call-utility-in-xv6
+4. https://www.geeksforgeeks.org/xv6-operating-system-adding-a-new-system-call/
