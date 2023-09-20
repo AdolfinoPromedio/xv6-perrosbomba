@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "pstat.h" // Added for getpinfo
 
 int
 sys_fork(void)
@@ -88,4 +89,38 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int
+sys_settickets(void) {
+    int n;
+
+    if(argint(0, &n) < 0 || n < 1)
+        return -1;
+
+    acquire(&ptable.lock);
+    myproc()->tickets = n;
+    release(&ptable.lock);
+    return 0;
+}
+
+int
+sys_getpinfo(void) {
+    struct pstat* ps;
+    struct proc* p;
+
+    if(argint(0, (int*)(&ps)) < 0)
+		return -1;
+
+    acquire(&ptable.lock);
+    int i = 0;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+        ps->inuse[i] = p->inuse;
+        ps->tickets[i] = p->tickets;
+        ps->pid[i] = p->pid;
+        ps->ticks[i] = p->ticks;
+        i++;
+    }
+    release(&ptable.lock);
+    return 0;
 }

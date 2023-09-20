@@ -1,3 +1,8 @@
+#ifndef _PROC_H_
+#define _PROC_H_
+
+#include "spinlock.h"
+
 // Per-CPU state
 struct cpu {
   uchar apicid;                // Local APIC ID
@@ -49,6 +54,9 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  int tickets;                 // Number of lottery tickets this process has
+  int ticks;                   // How many ticks this process has accumulated
+  int inuse;                  // Process name (debugging)
 };
 
 // Process memory is laid out contiguously, low addresses first:
@@ -56,3 +64,11 @@ struct proc {
 //   original data and bss
 //   fixed-size stack
 //   expandable heap
+
+struct ptable_type {
+	struct spinlock lock;
+	struct proc proc[NPROC];
+};
+extern struct ptable_type ptable;
+
+#endif // _PROC_H_

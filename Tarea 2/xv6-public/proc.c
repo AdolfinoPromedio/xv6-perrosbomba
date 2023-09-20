@@ -5,12 +5,10 @@
 #include "mmu.h"
 #include "x86.h"
 #include "proc.h"
-#include "spinlock.h"
+#include "utils.h"
+//#include <stdio.h>
 
-struct {
-  struct spinlock lock;
-  struct proc proc[NPROC];
-} ptable;
+struct ptable_type ptable = {0};
 
 static struct proc *initproc;
 
@@ -88,6 +86,9 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->tickets = 100;
+  p->inuse = 0;
+  p->ticks = 0;
 
   release(&ptable.lock);
 
@@ -199,6 +200,9 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
+  np->tickets = curproc->tickets;
+  np->ticks = 0;
+  np->inuse = 0;
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
@@ -311,6 +315,18 @@ wait(void)
   }
 }
 
+int
+number_tickets()
+{
+  struct proc *p;
+  int total_tickets = 0;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == RUNNABLE || p->state == RUNNING) total_tickets += p->tickets;
+  }
+  return total_tickets;
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -325,30 +341,51 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
+
+  int counter, winner;
+  counter = winner = 0;
   
   for(;;){
     // Enable interrupts on this processor.
     sti();
 
-    // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+
+    counter = 0;
+    winner = random(number_tickets());
+
+    // Loop over process table looking for process to run.
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
+        continue;
+
+      counter += p->tickets;
+      if (counter <= winner)
         continue;
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
+
+      
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
 
+      int begin = ticks;
+      p->inuse = 1;
       swtch(&(c->scheduler), p->context);
+      p->inuse = 0;
+      p->ticks += ticks - begin;
+
       switchkvm();
 
       // Process is done running for now.
       // It should have changed its p->state before coming back.
+      cprintf("EL PROCESO %d SE ESTA EJECUTANDO EN LA CPU CON %d TICKETS.\n", p->pid, p->tickets);
       c->proc = 0;
+
+      break;
     }
     release(&ptable.lock);
 
