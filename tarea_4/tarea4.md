@@ -1,15 +1,15 @@
-#Pasos para la tarea 4: 
+# Pasos para la tarea 4: 
 
 Agregar una nueva llamada de sistema en XV6 que, dada una dirección virtual, retorne la dirección física, o diga que la dirección no es válida.
 
-##Paso 1: Modificar el archivo syscall.h
+## Paso 1: Modificar el archivo syscall.h
 
 Agregar la siguiente línea al final del archivo:
 ```
 #define SYS_v2p    22
 ```
 
-##Paso 2: Modificar el archivo syscall.c
+## Paso 2: Modificar el archivo syscall.c
 
 Agregar la siguiente línea luego de int argstr:
 ```
@@ -20,7 +20,7 @@ Agregar la siguiente línea en static int
 [SYS_v2p]    sys_v2p,
 ```
 
-##Paso 3: Modificar el archivo sysproc.c:
+## Paso 3: Modificar el archivo sysproc.c:
 
 Añadir al final del archivo:
 ```
@@ -36,21 +36,21 @@ sys_v2p(void)
 }
 ```
 
-##Paso 4: Modificar el archivo usys.S
+## Paso 4: Modificar el archivo usys.S
 
 Añadir al final del archivo:
 ```
 SYSCALL(v2p)
 ```
 
-##Paso 5: Modificar el archivo user.h
+## Paso 5: Modificar el archivo user.h
 
 Añadir en system calls:
 ```
 int v2p(void*);
 ```
 
-##Paso 6: Modificar el archivo vm.c
+## Paso 6: Modificar el archivo vm.c
 
 Añadir al inicio del archivo:
 ```
@@ -82,7 +82,7 @@ v2p(void *vaddr)
 }
 ```
 
-##Paso 7: Crear el archivo v2p.c
+## Paso 7: Crear el archivo v2p.c
 
 ```
 #include "types.h"
@@ -109,7 +109,7 @@ main(int argc, char *argv[])
 }
 ```
 
-##Paso 8: Modificar el archivo Makefile
+## Paso 8: Modificar el archivo Makefile
 
 Añadir en UPROGS:
 ```
@@ -120,12 +120,12 @@ Añadir en EXTRA:
 v2p.c\
 ```
 
-##Paso 9: Compilar y ejecutar
+## Paso 9: Compilar y ejecutar
 ```
 make qemu-nox
 ```
 
-##Paso 10: Ingresar dirección
+## Paso 10: Ingresar dirección
 
 Por ejemplo:
 ```
