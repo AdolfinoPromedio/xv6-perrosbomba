@@ -1,13 +1,16 @@
 #Pasos para la tarea 4: 
+
 Agregar una nueva llamada de sistema en XV6 que, dada una dirección virtual, retorne la dirección física, o diga que la dirección no es válida.
 
 ##Paso 1: Modificar el archivo syscall.h
+
 Agregar la siguiente línea al final del archivo:
 ```
 #define SYS_v2p    22
 ```
 
 ##Paso 2: Modificar el archivo syscall.c
+
 Agregar la siguiente línea luego de int argstr:
 ```
 extern int sys_v2p(void);
@@ -18,6 +21,7 @@ Agregar la siguiente línea en static int
 ```
 
 ##Paso 3: Modificar el archivo sysproc.c:
+
 Añadir al final del archivo:
 ```
 int
@@ -33,18 +37,21 @@ sys_v2p(void)
 ```
 
 ##Paso 4: Modificar el archivo usys.S
+
 Añadir al final del archivo:
 ```
 SYSCALL(v2p)
 ```
 
 ##Paso 5: Modificar el archivo user.h
+
 Añadir en system calls:
 ```
 int v2p(void*);
 ```
 
 ##Paso 6: Modificar el archivo vm.c
+
 Añadir al inicio del archivo:
 ```
 int
@@ -76,6 +83,7 @@ v2p(void *vaddr)
 ```
 
 ##Paso 7: Crear el archivo v2p.c
+
 ```
 #include "types.h"
 #include "stat.h"
@@ -102,6 +110,7 @@ main(int argc, char *argv[])
 ```
 
 ##Paso 8: Modificar el archivo Makefile
+
 Añadir en UPROGS:
 ```
 _v2p\
@@ -117,7 +126,16 @@ make qemu-nox
 ```
 
 ##Paso 10: Ingresar dirección
+
 Por ejemplo:
 ```
 v2p 0x1000
 ```
+Referencias:
+- https://medium.com/@mahi12/adding-system-call-in-xv6-a5468ce1b463
+- https://github.com/CelestialZeus/Virtual_To_Physical_Memory_Translator/blob/master/README.md
+- https://xiayingp.gitbook.io/build_a_os/virtual-memory/untitled-1/how-to-display-physical-memory
+- https://xiayingp.gitbook.io/build_a_os/virtual-memory/xv6-virtual-memory
+- https://github.com/yspkm/xv6-virtual-memory
+- https://github.com/zarif98sjs/xv6-memory-management-walkthrough
+
